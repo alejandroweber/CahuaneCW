@@ -135,6 +135,11 @@ void setup() {
   EEPROM.get(eeAddress,step_size);
   eeAddress += sizeof(int);
 
+  //Actualizo los valores de tx
+  tx15m = rx15m;
+  tx20m = rx20m;
+  tx40m = rx40m;
+
   //Envio una V por el Sidetone
   ditdah(1);
   ditdah(1);
@@ -155,10 +160,12 @@ void loop() {
   if(digitalRead(key) == LOW) {
     last_key = millis();
     keyfunc(true);   //Actualiza DDS en TX
+    digitalWrite(CW_Out,HIGH); //CW output
     tone(SideTone,abs(offset)); //Genero Side Tone de la frecuencia correcta
     txmeter(true);
   }
   else {
+    digitalWrite(CW_Out,LOW); //CW output
     noTone(SideTone);
     keyfunc(false);
     if (key_flag == false) s_meter();
