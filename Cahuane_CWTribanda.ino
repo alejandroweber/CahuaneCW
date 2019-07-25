@@ -7,7 +7,8 @@
 #define Banda20m    A1
 #define Banda15m    A2
 #define BotonVFO    A3
-#define Audio       A6
+#define SMETER      A6
+#define VOLTS       A7
 #define BotonRIT    13
 #define AD9850_CLK  12
 #define AD9850_FQ   11
@@ -77,12 +78,14 @@ LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE); // YwRobot Arduin
 
 void setup() {
   Serial.begin(9600); // USB debug
+  analogReference(EXTERNAL); //S meter con el AD8307 - 1.5v Max Out
   
   pinMode(Banda40m, INPUT);
   pinMode(Banda20m, INPUT);
   pinMode(Banda15m, INPUT);
   pinMode(BotonVFO, INPUT);
   pinMode(BotonRIT, INPUT);
+  pinMode(SMETER, INPUT);
   pinMode(PinA, INPUT); 
   pinMode(PinB, INPUT);
   pinMode(key,  INPUT);
@@ -93,7 +96,9 @@ void setup() {
   pinMode(AD9850_FQ, OUTPUT);
   pinMode(AD9850_CLK, OUTPUT);
   pinMode(AD9850_DATA, OUTPUT);
-  pinMode(AD9850_RST, OUTPUT); 
+  pinMode(AD9850_RST, OUTPUT);
+
+  //Inicio el AD9850
   pulseHigh(AD9850_RST);
   pulseHigh(AD9850_CLK);
   pulseHigh(AD9850_FQ);
@@ -138,7 +143,7 @@ void setup() {
   //Actualizo los valores de tx
   tx15m = rx15m;
   tx20m = rx20m;
-  tx40m = rx40m;
+  tx40m = rx40m;  
 
   //Envio una V por el Sidetone
   ditdah(1);
@@ -160,12 +165,12 @@ void loop() {
   if(digitalRead(key) == LOW) {
     last_key = millis();
     keyfunc(true);   //Actualiza DDS en TX
-    digitalWrite(CW_Out,HIGH); //CW output
+    digitalWrite(CW_Out,HIGH); //CW output activa
     tone(SideTone,abs(offset)); //Genero Side Tone de la frecuencia correcta
     txmeter(true);
   }
   else {
-    digitalWrite(CW_Out,LOW); //CW output
+    digitalWrite(CW_Out,LOW); //CW output desactivado
     noTone(SideTone);
     keyfunc(false);
     if (key_flag == false) s_meter();

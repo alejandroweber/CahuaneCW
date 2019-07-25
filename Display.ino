@@ -22,28 +22,28 @@ void show_freq(void){
   
   if(rit_flag==true) lcd.print("R");
   else lcd.print(" ");
-  lcd.print("12.8");
+  lcd.print("12.8"); //Falta hacer la lectura de voltaje en A7 (VOLTS)
 }
 
 void s_meter(void){
-  unsigned int AudioAF = analogRead(Audio);
+  unsigned int SMeter = analogRead(SMETER);
 
   meter_counter = meter_counter * 100;
   if(meter_counter >= 1100) meter_counter = 0;
   lcd.setCursor(meter_counter/100,1);
-  if(AudioAF > meter_counter) lcd.print((char)255);
+  if(SMeter > meter_counter) lcd.print((char)255);
   else {
     lcd.print(" ");
   }
   meter_counter = meter_counter/100 + 1;
   
   lcd.setCursor(12,1);
-  if(AudioAF >= 0 && AudioAF <=10) lcd.print("S-0");
-  if(AudioAF >= 11 && AudioAF <= 200) lcd.print("S-1");
-  if(AudioAF >= 201 && AudioAF <= 400) lcd.print("S-3");
-  if(AudioAF >= 401 && AudioAF <= 600) lcd.print("S-5");
-  if(AudioAF >= 601 && AudioAF <= 800) lcd.print("S-7");
-  if(AudioAF >= 801 && AudioAF <= 1023) lcd.print("S-9");
+  if(SMeter >= 0 && SMeter <=10) lcd.print("S-0");
+  if(SMeter >= 11 && SMeter <= 200) lcd.print("S-1");
+  if(SMeter >= 201 && SMeter <= 400) lcd.print("S-3");
+  if(SMeter >= 401 && SMeter <= 600) lcd.print("S-5");
+  if(SMeter >= 601 && SMeter <= 800) lcd.print("S-7");
+  if(SMeter >= 801 && SMeter <= 1023) lcd.print("S-9");
 }
 
 void show_config(void){
